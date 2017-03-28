@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Accelerometer Test</string>
+    <string name="title_activity_fungsiutama">Accelerometer Reading</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="textView2">X Value</string>
+    <string name="textView3">Y Value</string>
+    <string name="textView4">Z Value</string>
+    <string name="textView1">Masukin Kantong Bro HPnya...</string>
+</resources>
