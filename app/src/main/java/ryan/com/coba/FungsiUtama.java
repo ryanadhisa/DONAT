@@ -51,9 +51,9 @@ public class FungsiUtama extends Activity implements SensorEventListener {
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    TextView x;
-    TextView y;
-    TextView z;
+    TextView viewx;
+    TextView viewy;
+    TextView viewz;
     TextView cond;
 
     TextView textduduk;
@@ -95,9 +95,9 @@ public class FungsiUtama extends Activity implements SensorEventListener {
 
 
         cond = (TextView) findViewById(R.id.textView1);
-        x = (TextView) findViewById(R.id.textView2);
-        y = (TextView) findViewById(R.id.textView3);
-        z = (TextView) findViewById(R.id.textView4);
+        viewx = (TextView) findViewById(R.id.textView2);
+        viewy = (TextView) findViewById(R.id.textView3);
+        viewz = (TextView) findViewById(R.id.textView4);
 
         radiotrain = (RadioButton)  findViewById(R.id.radioButton);
         radioclassify = (RadioButton)  findViewById(R.id.radioButton2);
@@ -143,11 +143,12 @@ public class FungsiUtama extends Activity implements SensorEventListener {
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
 
-        prox = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        sensorManager.registerListener(this, prox, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY),
+                SensorManager.SENSOR_DELAY_NORMAL);
 
 
     }
@@ -207,15 +208,13 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 Log.d("a", data);
 
                 try {
-                    writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "accel.csv", true), ',');
+                    writer = new CSVWriter(new FileWriter(path + File.separator + "accel.csv", true), ',');
                     String[] entries = data.split(";"); // array of your values
                     Log.d("a", entries[0]);
                     writer.writeNext(entries);
                     writer.close();
 
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
@@ -224,6 +223,7 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 Z.clear();
 
             }
+        }
 
             if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
 
@@ -234,36 +234,36 @@ public class FungsiUtama extends Activity implements SensorEventListener {
 
                     started = true;
 
-                    x.setText(Html.fromHtml(sx));
-                    y.setText(Html.fromHtml(sy));
-                    z.setText(Html.fromHtml(sz));
+                    viewx.setText(Html.fromHtml(sx));
+                    viewy.setText(Html.fromHtml(sy));
+                    viewz.setText(Html.fromHtml(sz));
                     cond.setText(Html.fromHtml(def));
 
                     String data = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ;Class";
+
                     try {
-                        writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + condition + ".csv"), ',');
+                        writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + condition + ".csv"), ',');
                         String[] entries = data.split(";"); // array of your values
                         writer.writeNext(entries);
                         writer.close();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
+                } else {
+
+                    started = false;
+
+                    viewx.setText(getString(R.string.textView2));
+                    viewy.setText(getString(R.string.textView3));
+                    viewz.setText(getString(R.string.textView4));
+                    cond.setText(getString(R.string.textView1));
+
                 }
-
-
-            } else {
-
-                started = false;
-
-                x.setText(getString(R.string.textView2));
-                y.setText(getString(R.string.textView3));
-                z.setText(getString(R.string.textView4));
-                cond.setText(getString(R.string.textView1));
-
             }
 
-        }
+
 
 
     }
