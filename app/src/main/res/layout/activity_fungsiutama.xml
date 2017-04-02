@@ -11,10 +11,12 @@
         android:textColor="#4169E1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:text="@string/textView1"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:text="@string/textView1" />
+        android:layout_centerHorizontal="true" />
+
+
 
     <TextView
         android:id="@+id/textView2"
@@ -22,10 +24,10 @@
         android:textColor="#FF0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="29dp"
+        android:text="@string/textView2"
         android:layout_above="@+id/textView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:text="@string/textView2" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/textView3"
@@ -33,8 +35,10 @@
         android:textColor="#FF0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/textView3" />
+        android:text="@string/textView3"
+        android:layout_marginBottom="29dp"
+        android:layout_above="@+id/textView4"
+        android:layout_alignStart="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView4"
@@ -42,10 +46,91 @@
         android:textColor="#FF0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="30dp"
-        android:text="@string/textView4" />
+        android:text="@string/textView4"
+        android:layout_marginBottom="59dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/textView3" />
+<RadioGroup
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/myRadioGroup"
+    android:background="#abf234"
+    android:checkedButton="@+id/sound"
+    android:layout_alignTop="@+id/checkBox"
+    android:layout_alignEnd="@+id/textView1"
+    android:layout_marginEnd="20dp">
+
+    <RadioButton
+        android:id="@+id/radioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Train"
+        android:layout_alignBaseline="@+id/radioButton2"
+        android:layout_alignBottom="@+id/radioButton2"
+        android:layout_toStartOf="@+id/textView2" />
+
+    <RadioButton
+        android:id="@+id/radioButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Classify"
+        android:layout_below="@+id/textView1"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_marginTop="34dp" />
+</RadioGroup>
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Duduk"
+        android:layout_below="@+id/textView1"
+        android:layout_toStartOf="@+id/textView2" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Berdiri"
+        android:layout_below="@+id/checkBox"
+        android:layout_alignStart="@+id/checkBox" />
+
+    <CheckBox
+        android:id="@+id/checkBox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Berjalan"
+        android:layout_below="@+id/checkBox2"
+        android:layout_alignStart="@+id/checkBox2" />
+
+    <TextView
+        android:id="@+id/textduduk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBaseline="@+id/checkBox"
+        android:layout_alignBottom="@+id/checkBox"
+        android:layout_alignStart="@+id/textView1" />
+
+    <TextView
+        android:id="@+id/textberdiri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBaseline="@+id/checkBox2"
+        android:layout_alignBottom="@+id/checkBox2"
+        android:layout_alignStart="@+id/textduduk" />
+
+    <TextView
+        android:id="@+id/textberjalan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBaseline="@+id/checkBox3"
+        android:layout_alignBottom="@+id/checkBox3"
+        android:layout_alignStart="@+id/textberdiri" />
 
 
 </RelativeLayout>
