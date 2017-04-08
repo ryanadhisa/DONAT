@@ -8,4 +8,5 @@
     <string name="textView3">Y Value</string>
     <string name="textView4">Z Value</string>
     <string name="textView1">Masukin Kantong Bro HPnya...</string>
+    <string name="title_activity_predict">Predict</string>
 </resources>

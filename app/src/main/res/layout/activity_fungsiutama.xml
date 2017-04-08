@@ -65,36 +65,13 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <RadioGroup
-
-                android:id="@+id/myRadioGroup"
+            <Button
+                android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/textView1"
-                android:layout_alignTop="@+id/checkBox"
-                android:layout_marginEnd="20dp"
-                android:background="#abf234"
-                android:checkedButton="@+id/sound">
-
-                <RadioButton
-                    android:id="@+id/radioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/radioButton2"
-                    android:layout_alignBottom="@+id/radioButton2"
-                    android:layout_toStartOf="@+id/textView2"
-                    android:checked="true"
-                    android:text="Train" />
-
-                <RadioButton
-                    android:id="@+id/radioButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView1"
-                    android:layout_marginTop="34dp"
-                    android:layout_toEndOf="@+id/textView2"
-                    android:text="Classify" />
-            </RadioGroup>
+                android:layout_below="@+id/textView1"
+                android:layout_centerHorizontal="true"
+                android:text="Start Predict" />
 
         </LinearLayout>
     </LinearLayout>
