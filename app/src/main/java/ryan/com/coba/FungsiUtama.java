@@ -40,6 +40,14 @@ import android.widget.Toast;
 
 import com.opencsv.CSVWriter;
 
+import weka.classifiers.Classifier;
+import weka.classifiers.lazy.IBk;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils;
+
 public class FungsiUtama extends Activity implements SensorEventListener {
 
     private SensorManager sensorManager;
@@ -63,7 +71,11 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     CheckBox cekberdiri;
     CheckBox cekberjalan;
 
+    private double aktivitas;
     String condition;
+    private Instances data;
+    private Classifier knn;
+    knn = new IBk(4);
 
     private float xVal, yVal, zVal;
     private ArrayList<Float> X, Y, Z;
@@ -151,6 +163,12 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 SensorManager.SENSOR_DELAY_NORMAL);
 
 
+
+        Attribute att = data.classAttribute();
+        for(int i = 0; i < data.numClasses();i++) {
+            Log.d("g",att.value(i));
+        }
+
     }
 
     @Override
@@ -160,10 +178,10 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent event, String data) {
         // TODO Auto-generated method stub
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && started && !stopped) {
 
             xVal = event.values[0];
             yVal = event.values[1];
@@ -202,13 +220,13 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 stdDevX = (float) Math.sqrt(stdX / (window - 1));
                 stdDevY = (float) Math.sqrt(stdY / (window - 1));
                 stdDevZ = (float) Math.sqrt(stdZ / (window - 1));
-                String data = String.valueOf(meanX) + ";" + String.valueOf(meanY) + ";" + String.valueOf(meanZ) + ';' + String.valueOf(stdDevX) + ';' + String.valueOf(stdDevY) + ';' + String.valueOf(stdDevZ)
+                data = String.valueOf(meanX) + ";" + String.valueOf(meanY) + ";" + String.valueOf(meanZ) + ';' + String.valueOf(stdDevX) + ';' + String.valueOf(stdDevY) + ';' + String.valueOf(stdDevZ)
                         + ';' + String.valueOf(Collections.max(X)) + ';' + String.valueOf(Collections.max(Y)) + ';' + String.valueOf(Collections.max(Z)) + ';' + String.valueOf(Collections.min(X))
                         + ';' + String.valueOf(Collections.min(Y)) + ';' + String.valueOf(Collections.min(Z) + ';' + condition);
                 Log.d("a", data);
 
                 try {
-                    writer = new CSVWriter(new FileWriter(path + File.separator + "accel.csv", true), ',');
+                    writer = new CSVWriter(new FileWriter(path + File.separator + "acc.csv", true), ','); //kayaknya dibuat predict
                     String[] entries = data.split(";"); // array of your values
                     Log.d("a", entries[0]);
                     writer.writeNext(entries);
@@ -225,24 +243,25 @@ public class FungsiUtama extends Activity implements SensorEventListener {
             }
         }
 
-            if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) { //ditambah logic radiobutton train / classify
+
 
                 currentDis = event.values[0];
                 def = "You Can't See This";
 
-                if (currentDis < 2) {
+                if (currentDis < 2 && !stopped) {
 
-                    started = true;
+
 
                     viewx.setText(Html.fromHtml(sx));
                     viewy.setText(Html.fromHtml(sy));
                     viewz.setText(Html.fromHtml(sz));
                     cond.setText(Html.fromHtml(def));
 
-                    String data = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ;Class";
+                    data = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ;Class";
 
                     try {
-                        writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + condition + ".csv"), ',');
+                        writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "acc.csv"), ',');
                         String[] entries = data.split(";"); // array of your values
                         writer.writeNext(entries);
                         writer.close();
@@ -250,6 +269,8 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    started = true;
 
                 } else {
 
@@ -264,8 +285,6 @@ public class FungsiUtama extends Activity implements SensorEventListener {
             }
 
 
-
-
     }
 
     public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -273,9 +292,24 @@ public class FungsiUtama extends Activity implements SensorEventListener {
         if(checkedId == R.id.radioButton) {
             Toast.makeText(getApplicationContext(), "KODE TRAIN DISINI",
                     Toast.LENGTH_SHORT).show();
+
+
     } else if(checkedId == R.id.radioButton2) {
             Toast.makeText(getApplicationContext(), "KODE CLASSIFY DISINI",
                     Toast.LENGTH_SHORT).show();
+
+            sensorManager.onSensorChanged(SensorEvent event);
+
+            try{
+                ConverterUtils.DataSource source = new ConverterUtils.DataSource(path + File.separator + "acc.csv"); //akses dataset
+                data = source.getDataSet();
+                if (data.classIndex() == -1)
+                    data.setClassIndex(data.numAttributes() - 1); //set baris pertama sendiri buat nama atribut
+                knn.buildClassifier(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
     }
 

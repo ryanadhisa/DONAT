@@ -3,134 +3,169 @@
     android:id="@+id/rl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ryan.com.coba.FungsiUtama" >
+    tools:context="ryan.com.coba.FungsiUtama">
 
     <TextView
         android:id="@+id/textView1"
-        android:textSize="25sp"
-        android:textColor="#4169E1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
         android:text="@string/textView1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textColor="#4169E1"
+        android:textSize="25sp" />
 
-
-
-    <TextView
-        android:id="@+id/textView2"
-        android:textSize="18sp"
-        android:textColor="#FF0000"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_parameter"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="29dp"
-        android:text="@string/textView2"
-        android:layout_above="@+id/textView3"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/textView1"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:textSize="18sp"
-        android:textColor="#FF0000"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView1"
+                android:layout_marginTop="14dp"
+                android:layout_toStartOf="@+id/textView2"
+                android:text="Duduk" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/checkBox"
+                android:layout_below="@+id/checkBox"
+                android:text="Berdiri" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/checkBox2"
+                android:layout_below="@+id/checkBox2"
+                android:text="Jalan " />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <RadioGroup
+
+                android:id="@+id/myRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/textView1"
+                android:layout_alignTop="@+id/checkBox"
+                android:layout_marginEnd="20dp"
+                android:background="#abf234"
+                android:checkedButton="@+id/sound">
+
+                <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/radioButton2"
+                    android:layout_alignBottom="@+id/radioButton2"
+                    android:layout_toStartOf="@+id/textView2"
+                    android:checked="true"
+                    android:text="Train" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView1"
+                    android:layout_marginTop="34dp"
+                    android:layout_toEndOf="@+id/textView2"
+                    android:text="Classify" />
+            </RadioGroup>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/textView3"
-        android:layout_marginBottom="29dp"
-        android:layout_above="@+id/textView4"
-        android:layout_alignStart="@+id/textView2" />
+        android:layout_below="@id/ll_parameter"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:textSize="18sp"
-        android:textColor="#FF0000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/textView4"
-        android:layout_marginBottom="59dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/textView3" />
-<RadioGroup
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="29dp"
+            android:text="@string/textView2"
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/myRadioGroup"
-    android:background="#abf234"
-    android:checkedButton="@+id/sound"
-    android:layout_alignTop="@+id/checkBox"
-    android:layout_alignEnd="@+id/textView1"
-    android:layout_marginEnd="20dp">
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView4"
+            android:layout_alignStart="@+id/textView2"
+            android:layout_marginBottom="29dp"
+            android:text="@string/textView3"
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
-    <RadioButton
-        android:id="@+id/radioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Train"
-        android:layout_alignBaseline="@+id/radioButton2"
-        android:layout_alignBottom="@+id/radioButton2"
-        android:layout_toStartOf="@+id/textView2" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textView3"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="59dp"
+            android:text="@string/textView4"
+            android:textColor="#FF0000"
+            android:textSize="18sp" />
 
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Classify"
-        android:layout_below="@+id/textView1"
-        android:layout_toEndOf="@+id/textView2"
-        android:layout_marginTop="34dp" />
-</RadioGroup>
+        <TextView
+            android:id="@+id/textduduk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkBox"
+            android:layout_alignBottom="@+id/checkBox"
+            android:layout_alignStart="@+id/textView1"
+            android:text="" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Duduk"
-        android:layout_below="@+id/textView1"
-        android:layout_toStartOf="@+id/textView2" />
+        <TextView
+            android:id="@+id/textberdiri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkBox2"
+            android:layout_alignBottom="@+id/checkBox2"
+            android:layout_alignStart="@+id/textduduk"
+            android:text="" />
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Berdiri"
-        android:layout_below="@+id/checkBox"
-        android:layout_alignStart="@+id/checkBox" />
-
-    <CheckBox
-        android:id="@+id/checkBox3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Berjalan"
-        android:layout_below="@+id/checkBox2"
-        android:layout_alignStart="@+id/checkBox2" />
-
-    <TextView
-        android:id="@+id/textduduk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_alignBaseline="@+id/checkBox"
-        android:layout_alignBottom="@+id/checkBox"
-        android:layout_alignStart="@+id/textView1" />
-
-    <TextView
-        android:id="@+id/textberdiri"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_alignBaseline="@+id/checkBox2"
-        android:layout_alignBottom="@+id/checkBox2"
-        android:layout_alignStart="@+id/textduduk" />
-
-    <TextView
-        android:id="@+id/textberjalan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_alignBaseline="@+id/checkBox3"
-        android:layout_alignBottom="@+id/checkBox3"
-        android:layout_alignStart="@+id/textberdiri" />
-
+        <TextView
+            android:id="@+id/textberjalan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkBox3"
+            android:layout_alignBottom="@+id/checkBox3"
+            android:layout_alignStart="@+id/textberdiri"
+            android:text="" />
+    </LinearLayout>
 
 </RelativeLayout>
