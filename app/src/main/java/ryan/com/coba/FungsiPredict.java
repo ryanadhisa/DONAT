@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -52,7 +54,6 @@ import com.opencsv.CSVWriter;
 
 
 public class FungsiPredict extends Activity implements SensorEventListener {
-
 
 
     private SensorManager sensorManager;
@@ -97,6 +98,7 @@ public class FungsiPredict extends Activity implements SensorEventListener {
         if (shouldAskPermissions()) {
             verifyStoragePermissions(this);
         }
+
         Button btn = (Button)findViewById(R.id.button);
 
         path = Environment.getExternalStoragePublicDirectory(
@@ -135,7 +137,7 @@ public class FungsiPredict extends Activity implements SensorEventListener {
         Z = new ArrayList<Float>();
         knn = new IBk(4);
         try{
-            ConverterUtils.DataSource source = new ConverterUtils.DataSource("/sdcard/acc.csv"); //dataset
+            ConverterUtils.DataSource source = new ConverterUtils.DataSource(path + File.separator + "acc.csv"); //dataset
                     data = source.getDataSet();
             if (data.classIndex() == -1)
                 data.setClassIndex(data.numAttributes() - 1); //set baris pertama sendiri buat nama atribut
@@ -171,10 +173,11 @@ public class FungsiPredict extends Activity implements SensorEventListener {
             sy = "Y Value : <font color = '#800080'> " + yVal + "</font>";
             sz = "Z Value : <font color = '#800080'> " + zVal + "</font>";
 
-
-            X.add(xVal);
-            Y.add(yVal);
-            Z.add(zVal);
+            if (started) {
+                X.add(xVal);
+                Y.add(yVal);
+                Z.add(zVal);
+            }
 
             if (X.size() == window) {
                 float sumX = 0, sumY = 0, sumZ = 0;
@@ -200,8 +203,7 @@ public class FungsiPredict extends Activity implements SensorEventListener {
                 stdDevX = (float) Math.sqrt(stdX / (window - 1));
                 stdDevY = (float) Math.sqrt(stdY / (window - 1));
                 stdDevZ = (float) Math.sqrt(stdZ / (window - 1));
-                double[] val = new double[] { meanX, meanY, meanZ,stdDevX, stdDevY, stdDevZ,Collections.max(X)
-                        , Collections.max(Y), Collections.max(Z), Collections.min(X),  Collections.min(Y), Collections.min(Z)};
+                double[] val = new double[] {meanX, meanY, meanZ, stdDevX, stdDevY, stdDevZ, Collections.max(X), Collections.max(Y), Collections.max(Z), Collections.min(X),  Collections.min(Y), Collections.min(Z)};
                 Instance instance = new DenseInstance(12, val); //konvert ke instance dulu biar bisa dicompare sama dataset
                 try {
                     aktivitas = knn.classifyInstance(instance);
@@ -217,13 +219,13 @@ public class FungsiPredict extends Activity implements SensorEventListener {
 
         }
 
-        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) { //ditambah logic radiobutton train / classify
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
 
 
             currentDis = event.values[0];
 
 
-            if (currentDis < 2) {
+            if (currentDis < 5) {
 
                 started = true;
 
@@ -239,7 +241,7 @@ public class FungsiPredict extends Activity implements SensorEventListener {
                 viewx.setText(getString(R.string.textView2));
                 viewy.setText(getString(R.string.textView3));
                 viewz.setText(getString(R.string.textView4));
-                cond.setText(getString(R.string.textView1));
+                //cond.setText(getString(R.string.textView1));
 
             }
         }
@@ -261,7 +263,6 @@ public class FungsiPredict extends Activity implements SensorEventListener {
                     activity, permission, request);
         }
     }
-
 
     protected void onPause() {
         super.onPause();

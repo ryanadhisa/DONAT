@@ -1,11 +1,12 @@
-package ryan.com.coba;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.content.Intent;
-import android.widget.Button;
-import android.widget.TextView;
+        package ryan.com.coba;
+
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.view.View;
+        import android.content.Intent;
+        import android.widget.Button;
+        import android.widget.TextView;
 
 public class SplashScreen extends AppCompatActivity {
     //int z;
@@ -25,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-               // hitung(x,y); //panggil fungsi liar
+                // hitung(x,y); //panggil fungsi liar
 
                 //txt.setText(Integer.toString(z)); //set txt hello world untuk menampilkan hasil fungsi hitung (z)
 
@@ -37,7 +38,8 @@ public class SplashScreen extends AppCompatActivity {
         });
     }
 
-   // public void hitung(int x, int y){ //fungsi liar
-       // z = x + y;
+    // public void hitung(int x, int y){ //fungsi liar
+    // z = x + y;
     //}
 }
+

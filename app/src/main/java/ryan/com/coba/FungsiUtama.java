@@ -1,5 +1,6 @@
 package ryan.com.coba;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +25,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.Manifest;
 import android.widget.Toast;
+import android.os.Vibrator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +68,7 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     CheckBox cekduduk;
     CheckBox cekberdiri;
     CheckBox cekberjalan;
+    CheckBox ceknewdata;
 
     private double aktivitas;
     String condition;
@@ -73,6 +78,8 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     private int window = 20;
     private boolean started = false;
     private boolean stopped = true;
+
+
 
     float currentDis;
     String sx, sy, sz, def;
@@ -86,6 +93,8 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fungsiutama);
+
+
 
         if (shouldAskPermissions()) {
             verifyStoragePermissions(this);
@@ -104,6 +113,29 @@ public class FungsiUtama extends Activity implements SensorEventListener {
         cekduduk = (CheckBox) findViewById(R.id.checkBox);
         cekberdiri = (CheckBox) findViewById(R.id.checkBox2);
         cekberjalan = (CheckBox) findViewById(R.id.checkBox3);
+
+        ceknewdata = (CheckBox) findViewById(R.id.checkBox4);
+
+        ceknewdata.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                String data = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ;Class";
+                try
+                {
+                    writer = new CSVWriter(new FileWriter(path + File.separator + "acc.csv"),',');
+                    String[] entries = data.split(";"); // array of your values
+                    writer.writeNext(entries);
+                    writer.close();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                ceknewdata.setChecked(false);
+
+            }
+        });
 
         cekduduk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -175,7 +207,7 @@ public class FungsiUtama extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         // TODO Auto-generated method stub
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && started && !stopped) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             xVal = event.values[0];
             yVal = event.values[1];
@@ -185,12 +217,14 @@ public class FungsiUtama extends Activity implements SensorEventListener {
             sy = "Y Value : <font color = '#800080'> " + yVal + "</font>";
             sz = "Z Value : <font color = '#800080'> " + zVal + "</font>";
 
-
-            X.add(xVal);
-            Y.add(yVal);
-            Z.add(zVal);
+            if (started) {
+                X.add(xVal);
+                Y.add(yVal);
+                Z.add(zVal);
+            }
 
             if (X.size() == window) {
+
                 float sumX = 0, sumY = 0, sumZ = 0;
                 float stdX = 0, stdY = 0, stdZ = 0;
                 float stdDevX = 0, stdDevY = 0, stdDevZ = 0;
@@ -214,16 +248,16 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 stdDevX = (float) Math.sqrt(stdX / (window - 1));
                 stdDevY = (float) Math.sqrt(stdY / (window - 1));
                 stdDevZ = (float) Math.sqrt(stdZ / (window - 1));
-                String data = String.valueOf(meanX) + ";" + String.valueOf(meanY) + ";" + String.valueOf(meanZ) + ';' + String.valueOf(stdDevX) + ';' + String.valueOf(stdDevY) + ';' + String.valueOf(stdDevZ)
+                String data = String.valueOf(meanX) + ';' + String.valueOf(meanY) + ';' + String.valueOf(meanZ) + ';' + String.valueOf(stdDevX) + ';' + String.valueOf(stdDevY) + ';' + String.valueOf(stdDevZ)
                         + ';' + String.valueOf(Collections.max(X)) + ';' + String.valueOf(Collections.max(Y)) + ';' + String.valueOf(Collections.max(Z)) + ';' + String.valueOf(Collections.min(X))
-                        + ';' + String.valueOf(Collections.min(Y)) + ';' + String.valueOf(Collections.min(Z) + ';' + condition);
+                        + ';' + String.valueOf(Collections.min(Y)) + ';' + String.valueOf(Collections.min(Z)) + ';' + condition;
                 Log.d("a", data);
 
                 try {
-                    writer = new CSVWriter(new FileWriter(path + File.separator + "acc.csv", true), ','); //kayaknya dibuat FungsiPredict
+                    writer = new CSVWriter(new FileWriter(path + File.separator + "acc.csv", true), ','); //file dibuat FungsiPredict
                     String[] entries = data.split(";"); // array of your values
                     Log.d("a", entries[0]);
-                    writer.writeNext(entries);
+                    writer.writeNext(entries); //write next value
                     writer.close();
 
                 } catch (IOException e) {
@@ -234,16 +268,18 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                 Y.clear();
                 Z.clear();
 
+                Vibrator vibrate = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+                vibrate.vibrate(100);
+
             }
         }
 
-            if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) { //ditambah logic radiobutton train / classify
-
+            if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
 
                 currentDis = event.values[0];
                 def = "You Can't See This";
 
-                if (currentDis < 2) {
+                if (currentDis < 5) {
 
                     started = true;
 
@@ -251,18 +287,6 @@ public class FungsiUtama extends Activity implements SensorEventListener {
                     viewy.setText(Html.fromHtml(sy));
                     viewz.setText(Html.fromHtml(sz));
                     cond.setText(Html.fromHtml(def));
-
-                    String data = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ;Class";
-
-                    try {
-                        writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "acc.csv"), ',');
-                        String[] entries = data.split(";"); // array of your values
-                        writer.writeNext(entries);
-                        writer.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
                 } else {
 
@@ -278,6 +302,7 @@ public class FungsiUtama extends Activity implements SensorEventListener {
 
 
     }
+
 
     protected boolean shouldAskPermissions() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
