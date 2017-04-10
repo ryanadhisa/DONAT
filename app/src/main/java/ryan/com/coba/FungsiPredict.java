@@ -32,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +44,7 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils;
 
 import android.app.Activity;
@@ -64,6 +67,9 @@ public class FungsiPredict extends Activity implements SensorEventListener {
     private Sensor accel;
     private Sensor prox;
 
+    public IBk model;
+    private double aktivitas;
+
     TextView viewx;
     TextView viewy;
     TextView viewz;
@@ -72,9 +78,9 @@ public class FungsiPredict extends Activity implements SensorEventListener {
     private float xVal, yVal, zVal;
     private ArrayList<Float> X, Y, Z;
     private int window = 20;
-    private double aktivitas;
     private boolean started = false;
     private boolean stopped = true;
+    private String attr = "MeanX;MeanY;MeanZ;StdDevX;StdDevY;StdDevZ;MaxX;MaxY;MaxZ;MinX;MinY;MinZ";
 
     float currentDis;
     String sx, sy, sz, def;
@@ -135,22 +141,32 @@ public class FungsiPredict extends Activity implements SensorEventListener {
         X = new ArrayList<Float>();
         Y = new ArrayList<Float>();
         Z = new ArrayList<Float>();
-        knn = new IBk(4);
+
+        Classifier knn = new IBk(3);
         try{
             ConverterUtils.DataSource source = new ConverterUtils.DataSource(path + File.separator + "acc.csv"); //dataset
-                    data = source.getDataSet();
+            data = source.getDataSet();
             if (data.classIndex() == -1)
                 data.setClassIndex(data.numAttributes() - 1); //set baris pertama sendiri buat nama atribut
             knn.buildClassifier(data);
+
+            ObjectOutputStream oos = new ObjectOutputStream(
+                    new FileOutputStream (path + File.separator + "model"));
+            oos.writeObject(knn);
+            oos.flush();
+            oos.close();
+
+            model = (IBk) SerializationHelper.read(new FileInputStream(path + File.separator + "model"));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         Attribute att = data.classAttribute();
         for(int i = 0; i < data.numClasses();i++) {
-            Log.d("g",att.value(i));
+            Log.d("kungga",att.value(i));
         }
+
     }
 
 
@@ -199,19 +215,26 @@ public class FungsiPredict extends Activity implements SensorEventListener {
                     stdY += (Y.get(j) - meanY) * (Y.get(j) - meanY);
                     stdZ += (Z.get(j) - meanZ) * (Z.get(j) - meanZ);
                 }
-                Collections.max(X);
+
                 stdDevX = (float) Math.sqrt(stdX / (window - 1));
                 stdDevY = (float) Math.sqrt(stdY / (window - 1));
                 stdDevZ = (float) Math.sqrt(stdZ / (window - 1));
+
                 double[] val = new double[] {meanX, meanY, meanZ, stdDevX, stdDevY, stdDevZ, Collections.max(X), Collections.max(Y), Collections.max(Z), Collections.min(X),  Collections.min(Y), Collections.min(Z)};
-                Instance instance = new DenseInstance(12, val); //konvert ke instance dulu biar bisa dicompare sama dataset
+                Instance instance = new DenseInstance(1.0, val); //konvert ke instance dulu biar bisa dicompare sama dataset
+                instance.setDataset(data);
+
                 try {
-                    aktivitas = knn.classifyInstance(instance);
+                    aktivitas = model.classifyInstance(instance);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.d("akt",String.valueOf(aktivitas));
+
+                Log.d("donat",String.valueOf(aktivitas));
                 cond.setText(data.classAttribute().value((int)aktivitas)); //print teks dari kelas yang tadinya hasilnya angka jadi diambil teksnya
+
+
                 X.clear();
                 Y.clear();
                 Z.clear();
